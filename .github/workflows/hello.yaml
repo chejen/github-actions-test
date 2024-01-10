@@ -5,7 +5,7 @@ on:
 
 jobs:
   job_foo: # <job_id>
-    name: Job Foo
+    name: Job Foo # Job name will be displayed in each run's "Jobs"
     runs-on: ubuntu-latest
 
     # Map a step output to a job output
@@ -18,6 +18,10 @@ jobs:
     - id: step1_in_job_foo
       # $GITHUB_OUTPUT is shared between all steps in a job
       # https://docs.github.com/en/actions/using-jobs/defining-outputs-for-jobs
+
+      # sed: This stands for "stream editor," a command-line tool that processes and transforms text.
+      # It follows the syntax s|pattern|replacement|flags.
+      # [/_\.\+] includes the characters /, _, ., and +. 
       run: |-
         echo "sha-short=${GITHUB_SHA:0:7}" >> $GITHUB_OUTPUT
         echo "ref-name-slug=$(sed 's|[/_\.\+]|-|g' <<< ${GITHUB_REF_NAME})" >> $GITHUB_OUTPUT
@@ -30,7 +34,7 @@ jobs:
       - job_foo
 
     steps:
-      - name: Checking
+      - name: Checking # Step name will be displayed in each Job.
         id: step_check_in_job_bar
         run: |
           echo "[step_check_in_job_bar]"
@@ -42,12 +46,17 @@ jobs:
             echo "has-base-or-code-changed=false" >> $GITHUB_OUTPUT
           fi
 
-          echo "github.event.action=${{ github.event.action }}"
-          echo "github.event.changes.base.ref.from=${{ github.event.changes.base.ref.from }}"
+          echo "github.event.action="${{ github.event.action }}
+          echo "github.event.changes.base.ref.from="${{ github.event.changes.base.ref.from }}
 
       - id: step_output_in_job_bar
         env:
           SHA_SHORT: ${{ needs.job_foo.outputs.sha-short }}
+        # $GITHUB_SHA: 21f0a2c07e879b534070cc2061b03d9bdab05126
+        # $SHA_SHORT: 21f0a2c
+        # $GITHUB_REF_NAME: feature/foo_bar+foo.bar
+        # ${{ github.ref_name }}: feature/foo_bar+foo.bar
+        # ${{ needs.job_foo.outputs.ref-name-slug }}: feature-foo-bar-foo-bar
         run: |
           echo "[step_output_in_job_bar]"
           echo $SHA_SHORT
