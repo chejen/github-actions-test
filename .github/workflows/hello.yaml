@@ -50,6 +50,8 @@ jobs:
           SHA_SHORT: ${{ needs.job_foo.outputs.sha-short }}
         run: |
           echo "[step_output_in_job_bar]"
-          echo "$SHA_SHORT"
+          echo $SHA_SHORT
           echo ${{ needs.job_foo.outputs.ref-name-slug }}
           echo ${{ needs.job_foo.outputs.ref-name }}
+          echo $GITHUB_REF_NAME
+          echo $GITHUB_SHA
