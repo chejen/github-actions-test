@@ -13,9 +13,6 @@ jobs:
       sha-short: ${{ steps.step1_in_job_foo.outputs.sha-short }}
       ref-name: ${{ github.ref_name }}
       ref-name-slug: ${{ steps.step1_in_job_foo.outputs.ref-name-slug }}
-      something-else:
-        description: desc for something else
-        value: sthElse
 
     steps:
     - id: step1_in_job_foo
@@ -33,11 +30,26 @@ jobs:
       - job_foo
 
     steps:
-      - id: step1_in_job_bar
+      - name: Checking
+        id: step_check_in_job_bar
+        run: |
+          echo "[step_check_in_job_bar]"
+          echo "has-base-or-code-changed=true" >> $GITHUB_OUTPUT
+
+          # if the activity type is edited, and does not change the base ref,
+          # then set has-base-or-code-changed to false
+          if [ ${{ github.event.action }} == "edited" ] && [ -z "${{ github.event.changes.base.ref.from }}" ]; then
+            echo "has-base-or-code-changed=false" >> $GITHUB_OUTPUT
+          fi
+
+          echo "github.event.action=${{ github.event.action }}"
+          echo "github.event.changes.base.ref.from=${{ github.event.changes.base.ref.from }}"
+
+      - id: step_output_in_job_bar
         env:
           SHA_SHORT: ${{ needs.job_foo.outputs.sha-short }}
         run: |
+          echo "[step_output_in_job_bar]"
           echo "$SHA_SHORT"
           echo ${{ needs.job_foo.outputs.ref-name-slug }}
           echo ${{ needs.job_foo.outputs.ref-name }}
-          echo ${{ needs.job_foo.outputs.something-else }}
