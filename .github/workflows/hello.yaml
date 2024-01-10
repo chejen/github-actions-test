@@ -1,0 +1,43 @@
+name: Hello
+
+on:
+  push
+
+jobs:
+  job_foo: # <job_id>
+    name: Job Foo
+    runs-on: ubuntu-latest
+
+    # Map a step output to a job output
+    outputs:
+      sha-short: ${{ steps.step1_in_job_foo.outputs.sha-short }}
+      ref-name: ${{ github.ref_name }}
+      ref-name-slug: ${{ steps.step1_in_job_foo.outputs.ref-name-slug }}
+      something-else:
+        description: desc for something else
+        value: sthElse
+
+    steps:
+    - id: step1_in_job_foo
+      # $GITHUB_OUTPUT is shared between all steps in a job
+      # https://docs.github.com/en/actions/using-jobs/defining-outputs-for-jobs
+      run: |-
+        echo "sha-short=${GITHUB_SHA:0:7}" >> $GITHUB_OUTPUT
+        echo "ref-name-slug=$(sed 's|[/_\.\+]|-|g' <<< ${GITHUB_REF_NAME})" >> $GITHUB_OUTPUT
+
+  bar: # <job_id>
+    name: Job Bar
+    runs-on: ubuntu-latest
+
+    needs:
+      - job_foo
+
+    steps:
+      - id: step1_in_job_bar
+        env:
+          SHA_SHORT: ${{ needs.job_foo.outputs.sha-short }}
+        run: |
+          echo "$SHA_SHORT"
+          echo ${{ needs.job_foo.outputs.ref-name-slug }}
+          echo ${{ needs.job_foo.outputs.ref-name }}
+          echo ${{ needs.job_foo.outputs.something-else }}
