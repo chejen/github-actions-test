@@ -1,0 +1,10 @@
+{
+  "name": "github-actions-test",
+  "version": "1.0.0",
+  "description": "Tests on GitHub Actions",
+  "main": "src/index.js",
+  "private": true,
+  "type": "module",
+  "author": "chejen",
+  "license": "MIT"
+}

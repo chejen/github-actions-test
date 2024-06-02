@@ -1,0 +1,27 @@
+name: Env Test
+
+on:
+  push
+
+env:
+  FOO: ${{ secrets.ACTION_REPO_FOO }}
+
+jobs:
+  job-test:
+    name: Job Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - name: Log env
+        env:
+          BAR: ${{ secrets.ACTION_REPO_BAR }}
+          FOO2: ${{ vars.ACTION_VAR_BAR }}
+        run: |
+          npm install
+          node src/index
+          env
