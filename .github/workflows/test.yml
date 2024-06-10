@@ -9,8 +9,7 @@ env:
 jobs:
   job-test:
     uses: ./.github/workflows/resuable.yml
-    secrets:
-      FOO: ${{ secrets.ACTION_REPO_FOO }}
+    secrets: inherit
   #   name: Job Test
   #   runs-on: ubuntu-latest
   #   steps:

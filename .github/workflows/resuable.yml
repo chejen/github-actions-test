@@ -2,9 +2,6 @@ name: Resuable Workflow
 
 on:
   workflow_call:
-    secrets:
-      FOO:
-        required: true
 
 env:
   FOO: ${{ secrets.ACTION_REPO_FOO }}
@@ -18,5 +15,10 @@ jobs:
         env:
           BAR: ${{ secrets.ACTION_REPO_BAR }}
           FOO2: ${{ vars.ACTION_VAR_BAR }}
+          ALL: ${{ toJSON(secrets) }}
         run: |
-          env
+          echo $ALL | jq -r 'to_entries | .[] | @sh "printf \"%s=%s\" \(.key) \(.value) >> .testrc"' | bash
+          cat .testrc
+        
+        # echo $ALL | jq -r 'to_entries | .[] | @sh "printf \"%s=%s\n\" \(.key) \(.value) >> .testrc"' | bash
+        # echo $ALL | jq -r 'to_entries | .[] | @sh "echo \(.key)=\(.value) >> .testrc"' | bash
