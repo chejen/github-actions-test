@@ -1,0 +1,19 @@
+name: Resuable Workflow
+
+on:
+  workflow_call:
+
+env:
+  FOO: ${{ secrets.ACTION_REPO_FOO }}
+
+jobs:
+  job-resuable:
+    name: Resuable Test in resuable.yml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log env
+        env:
+          BAR: ${{ secrets.ACTION_REPO_BAR }}
+          FOO2: ${{ vars.ACTION_VAR_BAR }}
+        run: |
+          env
