@@ -2,6 +2,9 @@ name: Resuable Workflow
 
 on:
   workflow_call:
+    secrets:
+      FOO:
+        required: true
 
 env:
   FOO: ${{ secrets.ACTION_REPO_FOO }}
