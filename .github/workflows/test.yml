@@ -8,30 +8,32 @@ env:
 
 jobs:
   job-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print github.workflow
-        run: |
-          echo 100790333
-          echo "github.run_id is ${{ github.run_id }}"
-          echo "github.workflow is ${{ github.workflow }}"
-          echo "github.event.repository.name is ${{ github.event.repository.name }}"
-      - name: Check out the code
-        uses: actions/checkout@v4
-      # - name: Authenticate with GitHub CLI
-      #   run: |
-      #     echo "${{ github.token }}" | gh auth login --with-token
-      - name: Use GitHub CLI
-        # run: gh workflow enable "${{ github.workflow }}"
-        # gh workflow list
-        # gh workflow enable 100790333
-        # gh workflow enable $WORKFLOW_ID
-        run: |
-          gh workflow list
-          WORKFLOW_NAME="${{ github.workflow }}"
-          WORKFLOW_ID=$(gh workflow list | grep "$WORKFLOW_NAME" | awk '{print $3}')
-          echo $WORKFLOW_ID
-          gh workflow enable $WORKFLOW_ID
-        env:
-          # GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ github.token }}
+    uses: ./.github/workflows/resuable.yml
+
+    # runs-on: ubuntu-latest
+    # steps:
+    #   - name: Print github.workflow
+    #     run: |
+    #       echo 100790333
+    #       echo "github.run_id is ${{ github.run_id }}"
+    #       echo "github.workflow is ${{ github.workflow }}"
+    #       echo "github.event.repository.name is ${{ github.event.repository.name }}"
+    #   - name: Check out the code
+    #     uses: actions/checkout@v4
+    #   # - name: Authenticate with GitHub CLI
+    #   #   run: |
+    #   #     echo "${{ github.token }}" | gh auth login --with-token
+    #   - name: Use GitHub CLI
+    #     # run: gh workflow enable "${{ github.workflow }}"
+    #     # gh workflow list
+    #     # gh workflow enable 100790333
+    #     # gh workflow enable $WORKFLOW_ID
+    #     run: |
+    #       gh workflow list
+    #       WORKFLOW_NAME="${{ github.workflow }}"
+    #       WORKFLOW_ID=$(gh workflow list | grep "$WORKFLOW_NAME" | awk '{print $3}')
+    #       echo $WORKFLOW_ID
+    #       gh workflow enable $WORKFLOW_ID
+    #     env:
+    #       # GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #       GITHUB_TOKEN: ${{ github.token }}
