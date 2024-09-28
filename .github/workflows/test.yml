@@ -7,8 +7,6 @@ env:
   FOO: ${{ secrets.ACTION_REPO_FOO }}
 
 jobs:
-  print-info:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print github.workflow
-        run: echo "github.workflow is ${{ github.workflow }}"
+  job-test:
+    uses: ./.github/workflows/resuable.yml
+    secrets: inherit

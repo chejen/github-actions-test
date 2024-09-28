@@ -1,0 +1,13 @@
+name: Resuable Workflow
+
+on:
+  workflow_call:
+
+jobs:
+  print-info-in-resuable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print github.workflow
+        run: |
+          echo "github.workflow is ${{ github.workflow }}"
+          echo "github.event.repository.name is ${{ github.event.repository.name }}"
