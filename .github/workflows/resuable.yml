@@ -9,5 +9,12 @@ jobs:
     steps:
       - name: Print github.workflow
         run: |
+          echo "github.run_id is ${{ github.run_id }}"
           echo "github.workflow is ${{ github.workflow }}"
           echo "github.event.repository.name is ${{ github.event.repository.name }}"
+      - name: Check out the code
+        uses: actions/checkout@v4
+      - name: Use GitHub CLI
+        run: gh workflow enable ${{ github.run_id }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
