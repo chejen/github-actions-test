@@ -1,7 +1,10 @@
 name: Release Test
 
+# on:
+#   release
 on:
-  release
+  release:
+    types: [published]
 
 jobs:
   job_release:
